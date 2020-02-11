@@ -16,7 +16,7 @@
                   <h3>Form</h3>
                   
                   <select name="sel_db" class="form-control"  id="sel_db">
-                      <option value=""> Select DB </option>
+                      <option value="" onclick ="beforeSend()" > Select DB </option>
                         @foreach($database as $database)
                           <option value="{{ $database }} "> {{ $database }} </option>
                         @endforeach
@@ -27,15 +27,12 @@
                     <h2>Show Table form database1</h2>
                   
                     <form>
-                      <div class="checkbox">
-                        <label><input type="checkbox" value="">Table 1</label>
+
+                 
+                      <div class="checkbox" id='sel_emp'>
+                        <!-- <label><input type="checkbox" value="">Table 2</label> -->
                       </div>
-                      <div class="checkbox">
-                        <label><input type="checkbox" value="">Table 2</label>
-                      </div>
-                      <div class="checkbox ">
-                        <label><input type="checkbox" value="" >Table 3</label>
-                      </div>
+                      
                     </form>
       </div>
          <div class="col-md-6">
@@ -74,24 +71,52 @@ $(document).ready(function(){
 
   
   $('#sel_db').change(function(){
-
- var database = $(this).val();
+ 
+    var database = $(this).val();
+    var currentRequest = null;  
+    
      // AJAX request 
-     $.ajax({
-                type: "post",
-                url : "{{url('/testing')}}",
+          $.ajax({
+                 type: 'get',
+                // type: 'post',
+                url : "{{url('/table')}}",
                 
                 data : {
                   
-                  database:database ,
-                  _token: "{{ csrf_token() }}"
+                  database:database 
+                  // _token: "{{ csrf_token() }}"
                 },
-                success : function(data){
-                    console.log(data);
-                }
-  });
+                dataType: 'json',
+                 beforeSend : function()    {           
+                    if(currentRequest != null) {
+                        currentRequest.abort();
+                    }
+                },
+                success: function(response){
+                  var len = 0;
+                  if(response != null){
+                    len = response.length;
+                  }
+                  
+                  var table = response;
+                  
+                  if(len > 0){
+        
+                    for(var i=0; i<len; i++){
 
-});
+                 
+                      
+                    //  var option = "<label><input type="checkbox" value="">"+table[i]+"</label>";
+                         var option = "<option  value=''>"+table[i]+"</option>"; 
+
+                      $("#sel_emp").append(option); 
+                    }
+                  }
+
+                  }
+          });
+
+      });
 });
 
 </script>

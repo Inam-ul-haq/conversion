@@ -8,62 +8,63 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 use Illuminate\Http\Request;
-
+use mysqli;
 use DB;
+use Response;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    // private $connection;
-    // public function __construct()
-    // {
-    //     $this->connection = DB::connection('ATtechquiz1');
-
-    // }
+ 
     public function index(){
+      
         $tables = \DB::select('SHOW DATABASES'); 
         $tables=(array)$tables;
-        $database=array();
-        $d=array();
-
-
+        $database=array();    
         foreach($tables as $table)
         {
             array_push($database, $table->Database);
         }
+          // $d=array();
         // print_r($database);exit;
         // for($i=1;$i<10;$i++)
         // {
         //     $d[$i]=(array)(\DB::select('SHOW TABLES from '.$t[$i]));
         // }
-        // print_r($d);exit;
-   
-
-
-
-
-     
-    
+       // print_r($d);exit;        
     return view('database', compact('database'));
  }
 
 
  
- public function test(Request $request) {
+ public function showtable(Request $request) {
     $name1 = $request->input('database');
-    $name =  (array)(\DB::select('SHOW TABLES from '.$name1));
+    $name =  \DB::select('SHOW TABLES from '.$name1);
     
-    $name = (array)$name;
-    
-    // print_r($name);exit;
+
     $table =array();
    
     foreach($name as $name){
         $n=(array)$name;
-        // print_r($n['Tables_in_'.$name1]);
+  
         array_push($table, $n['Tables_in_'.$name1]);
     }
-    print_r($table);
+    //   print_r($table);exit();
+     
+    return Response::json($table);
+    
+  
 
+ }
+ public function savetable(){
+
+    // $toDay = 'backups/'.date('d-m-Y-H-i-s');
+    $dbhost = 'localhost';
+    $dbuser = 'root';
+    $dbpass = 'password';
+    $dbname = 'Datatable';
+
+    exec("mysqldump --user=$dbuser --password='$dbpass' --host=$dbhost $dbname users  > /home/inam/Downloads/users.sql");
+    dd(1234);
  }
 }

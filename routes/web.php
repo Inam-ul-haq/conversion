@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/user', 'Controller@index');
-Route::post('/testing','Controller@test');
+Route::get('/table','Controller@showtable');
 
 
 //Route::resource('/db','DbController');
