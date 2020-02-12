@@ -25,15 +25,23 @@
                 
 
                     <h2>Show Table form database1</h2>
-                  
-                    <form>
+                    <table id="table" class="table table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                        <th>Action</th>
+                        <th>Table Name</th>    
+                        </tr>
+  
+                        <tbody></tbody>
+                    </table>
+                    <!-- <form>
 
                  
                       <div class="checkbox" id='sel_emp'>
-                        <!-- <label><input type="checkbox" value="">Table 2</label> -->
-                      </div>
+                        <label><input type="checkbox" value="">Table 2</label> -->
+                      <!-- </div>
                       
-                    </form>
+                    </form> --> 
       </div>
          <div class="col-md-6">
                   <h3>To</h3>
@@ -73,7 +81,7 @@ $(document).ready(function(){
   $('#sel_db').change(function(){
  
     var database = $(this).val();
-    var currentRequest = null;  
+    
     
      // AJAX request 
           $.ajax({
@@ -87,31 +95,29 @@ $(document).ready(function(){
                   // _token: "{{ csrf_token() }}"
                 },
                 dataType: 'json',
-                 beforeSend : function()    {           
-                    if(currentRequest != null) {
-                        currentRequest.abort();
-                    }
-                },
-                success: function(response){
-                  var len = 0;
-                  if(response != null){
-                    len = response.length;
-                  }
-                  
-                  var table = response;
-                  
-                  if(len > 0){
-        
-                    for(var i=0; i<len; i++){
+                
+                success: function(response)
+                {
 
-                 
-                      
-                    //  var option = "<label><input type="checkbox" value="">"+table[i]+"</label>";
-                         var option = "<option  value=''>"+table[i]+"</option>"; 
+                  
 
-                      $("#sel_emp").append(option); 
-                    }
-                  }
+                                      var len = 0;
+                                      if(response != null){
+                                        len = response.length;
+                                      }
+                                      
+                                      var table = response;
+                                      var html ='';
+                                      if(len > 0){
+                                      for(var i=0; i<len; i++){
+                                      html += '<tr>';
+                                      html += '<td><input type="checkbox" id="'+[i]+'" data-name="'+table[i]+'" class="check_box"  /></td>';
+                                      html += '<td>'+table[i]+'</td></td>';                              
+                                        //  var option = "<label><input type="checkbox" value="">"+table[i]+"</label>";
+                                        //  var option = "<option  value=''>"+table[i]+"</option>"; 
+                                        //   $("#sel_emp").append(option); 
+                                        }$('tbody').html(html);
+                                      }
 
                   }
           });

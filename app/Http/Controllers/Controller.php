@@ -52,9 +52,8 @@ class Controller extends BaseController
     //   print_r($table);exit();
      
     return Response::json($table);
-    
   
-
+  
  }
  public function savetable(){
 
